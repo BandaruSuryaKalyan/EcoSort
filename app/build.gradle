@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -58,7 +60,7 @@ dependencies {
     implementation libs.android.ui
     implementation libs.screenshotty
     implementation libs.firebase.storage
-    implementation libs.firebase.crashlytics.ktx
+    implementation libs.firebase.crashlytics
     implementation libs.firebase.analytics.ktx
     implementation libs.firebase.perf.ktx
 
@@ -70,5 +72,4 @@ dependencies {
     implementation libs.firebase.core
     implementation libs.firebase.auth
     implementation libs.play.services.auth
-    
 }
