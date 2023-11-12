@@ -36,4 +36,39 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.ext.junit
     androidTestImplementation libs.espresso.core
+
+    //new implementations
+    androidTestImplementation libs.androidx.runner
+    implementation libs.multidex
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation libs.volley
+    implementation libs.material.v190
+
+    //firebase Access
+    implementation libs.firebase.core
+    implementation libs.firebase.database
+
+    //firebase RealtimeDatabase
+    implementation platform('com.google.firebase:firebase-bom:32.1.1')
+    implementation libs.firebase.analytics
+
+    //Dependencies for ScreenShot
+    implementation libs.falcon
+    implementation libs.android.ui
+    implementation libs.screenshotty
+    implementation libs.firebase.storage
+    implementation libs.firebase.crashlytics.ktx
+    implementation libs.firebase.analytics.ktx
+    implementation libs.firebase.perf.ktx
+
+    //lottie
+    implementation libs.lottie
+
+    //authentication
+    implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
+    implementation libs.firebase.core
+    implementation libs.firebase.auth
+    implementation libs.play.services.auth
+    
 }

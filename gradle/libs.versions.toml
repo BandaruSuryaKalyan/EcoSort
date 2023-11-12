@@ -1,19 +1,51 @@
 [versions]
 agp = "8.3.0-alpha03"
+android-ui = "1.2"
+falcon = "2.2.0"
+firebase-analytics = "21.5.0"
+firebase-auth = "22.2.0"
+firebase-core = "21.1.1"
+firebase-crashlytics-ktx = "18.5.1"
+firebase-database = "20.3.0"
+firebase-perf-ktx = "20.5.0"
+google-material = "1.9.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 appcompat = "1.6.1"
+lottie = "6.0.0"
 material = "1.10.0"
 constraintlayout = "2.1.4"
+multidex = "1.0.3"
+play-services-auth = "20.7.0"
+runner = "1.5.2"
+screenshotty = "1.0.4"
+volley = "1.2.1"
 
 [libraries]
+android-ui = { module = "com.github.markushi:android-ui", version.ref = "android-ui" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
+falcon = { module = "com.jraska:falcon", version.ref = "falcon" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebase-analytics" }
+firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx", version.ref = "firebase-analytics" }
+firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebase-auth" }
+firebase-core = { module = "com.google.firebase:firebase-core", version.ref = "firebase-core" }
+firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-ktx", version.ref = "firebase-crashlytics-ktx" }
+firebase-database = { module = "com.google.firebase:firebase-database", version.ref = "firebase-database" }
+firebase-perf-ktx = { module = "com.google.firebase:firebase-perf-ktx", version.ref = "firebase-perf-ktx" }
+firebase-storage = { module = "com.google.firebase:firebase-storage", version.ref = "firebase-database" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+material-v190 = { module = "com.google.android.material:material", version.ref = "google-material" }
+multidex = { module = "com.android.support:multidex", version.ref = "multidex" }
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "play-services-auth" }
+screenshotty = { module = "eu.bolt:screenshotty", version.ref = "screenshotty" }
+volley = { module = "com.android.volley:volley", version.ref = "volley" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
