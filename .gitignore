@@ -1,0 +1,36 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+
+#Added More
+# Gradle wrapper files
+/gradle-wrapper.jar
+/gradle-wrapper.properties
+
+# Android Studio generated files
+*.apk
+*.ap_
+*.dex
+bin/
+gen/
+proguard-rules.pro
+
+# Build files
+build/
+captures/
+
+# Windows thumbnail db
+Thumbs.db
