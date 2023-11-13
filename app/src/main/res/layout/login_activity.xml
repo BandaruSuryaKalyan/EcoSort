@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_constrain"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/login_constrain">
+    android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/textureimage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/texture"
+        app:layout_constraintBottom_toBottomOf="@+id/illustration_under_card_view"
+        app:layout_constraintDimensionRatio="9:16"
+        app:layout_constraintEnd_toEndOf="@+id/illustration_under_card_view"
+        app:layout_constraintStart_toStartOf="@+id/illustration_under_card_view"
+        app:layout_constraintTop_toTopOf="@+id/illustration_under_card_view" />
 
     <ImageView
         android:id="@+id/illustration_under_card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/under_the_card_image"
+        android:alpha="0.9"
+        android:scaleType="fitXY"
+        android:src="@drawable/bin_green"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintDimensionRatio="9:16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,41 +35,54 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:alpha="0.96"
         android:layout_marginHorizontal="25dp"
         app:cardUseCompatPadding="true"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp"
-            android:background="#ffffff">
+            android:background="#ffffff"
+            android:padding="16dp">
 
             <ImageView
                 android:id="@+id/image_view"
                 android:layout_width="0dp"
                 android:layout_height="350dp"
-                android:alpha="0.3"
+                android:alpha="0.45"
                 android:scaleType="centerInside"
-                android:src="@drawable/under_the_card_image"
+                android:src="@drawable/waste_management"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="16:9"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:alpha="0.5"
+                android:scaleType="fitXY"
+                android:src="@drawable/texture"
+                app:layout_constraintBottom_toBottomOf="@+id/apptitle"
+                app:layout_constraintEnd_toEndOf="@+id/apptitle"
+                app:layout_constraintStart_toStartOf="@+id/apptitle"
+                app:layout_constraintTop_toTopOf="@+id/apptitle" />
+
             <TextView
                 android:id="@+id/apptitle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/aldrich"
+                android:gravity="center"
                 android:text="ECO SORT"
-                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:textSize="25sp"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/image_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +102,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Log in"
-                    android:textSize="24sp"
+                    android:textColor="#E6000000"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -88,7 +113,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="E-mail"
+                    android:textColorHint="#80000000"
                     android:inputType="textEmailAddress"
+                    android:textColor="@color/black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/title" />
@@ -99,6 +126,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Password"
                     android:inputType="textPassword"
+                    android:textColorHint="#80000000"
+                    android:textColor="@color/black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edit_text_email" />
@@ -122,8 +151,8 @@
                     android:layout_marginTop="16dp"
                     android:backgroundTint="#E6094D04"
                     android:text=" Signup"
-                    android:visibility="invisible"
                     android:textColor="#ffffff"
+                    android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edit_text_password" />
@@ -147,7 +176,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="5px"
                 android:layout_margin="10dp"
-                android:background="#80000000"
+                app:dividerColor="#80000000"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/image_view" />
@@ -157,6 +186,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Or log in with"
+                android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/materialDivider" />
@@ -186,6 +216,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:textColor="@color/black"
                 android:text="Don't have an account? Create Account"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
