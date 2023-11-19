@@ -3,6 +3,7 @@ package com.suryakalyan.ecosort;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -24,14 +25,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.heatmaps.Gradient;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import com.google.maps.android.heatmaps.WeightedLatLng;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -122,6 +128,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 }
                 // Cluster markers
                 clusterManager.cluster();
+                updateHeatmap();
             }
             
             @Override
@@ -199,4 +206,52 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
         return "Address not available";
     }
+    
+    private void updateHeatmap() {
+        // Generate WeightedLatLng list based on your marker data
+        List<WeightedLatLng> weightedLatLngList = new ArrayList<>();
+        
+        for (MyMarkerClass marker : clusterManager.getAlgorithm().getItems()) {
+            LatLng markerPosition = marker.getPosition();
+            if (markerPosition != null) {
+                weightedLatLngList.add( new WeightedLatLng( markerPosition, 1 ) );
+            }
+        }
+        
+        // Check if the list is not empty before creating the HeatmapTileProvider
+        if (!weightedLatLngList.isEmpty()) {
+            HeatmapTileProvider heatmapTileProvider = new HeatmapTileProvider.Builder()
+                    .weightedData( weightedLatLngList )
+                    .radius( 50 ) // Adjust the radius as needed
+                    .gradient( heatmapGradient() )
+                    .build();
+            // Clear previous heatmap overlay
+            mMap.clear();
+            // Add the HeatmapTileProvider to the map
+            mMap.addTileOverlay( new TileOverlayOptions().tileProvider( heatmapTileProvider ) );
+            
+            // Cluster markers
+            clusterManager.cluster();
+        }
+    }
+    private Gradient heatmapGradient() {
+        // Define your heatmap gradient colors
+        int[] colors = {
+                Color.rgb( 0, 255, 0 ),  // green
+                Color.rgb( 255, 0, 0 )   // red
+        };
+        // Define your heatmap gradient start points
+        float[] startPoints = {
+                0.2f,  // green start point
+                1.0f   // red end point
+        };
+        // Ensure colors and startPoints have the same length
+        if (colors.length == startPoints.length) {
+            return new Gradient( colors, startPoints );
+        } else {
+            return new Gradient( new int[]{ Color.rgb( 0, 255, 0 ), Color.rgb( 255, 0, 0 ) }, new float[]{ 0.2f, 1.0f } );
+        }
+    }
+    
+    
 }
