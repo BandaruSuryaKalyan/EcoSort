@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     DashboardFragment dashboardFragment = new DashboardFragment();
     RewardsFragment rewardsFragment = new RewardsFragment();
     ProfileFragment profileFragment = new ProfileFragment();
+    MapsFragment mapsFragment = new MapsFragment();
     
     boolean PermissionsFlag = false;
     
@@ -44,17 +45,17 @@ public class MainActivity extends AppCompatActivity {
         
         
         bottomNavigationView = findViewById( R.id.bottom_nav_view );
-        getSupportFragmentManager().beginTransaction().replace( R.id.nav_host_fragment_activity_main, homeFragment ).commit();
+        getSupportFragmentManager().beginTransaction().replace( R.id.nav_host_fragment_activity_main, mapsFragment ).commit();
         
         bottomNavigationView.setOnItemSelectedListener( item -> {
             if (item.getItemId() == R.id.navigation_home) {
                 replaceFragment( new HomeFragment() );
                 return true;
+            } else if (item.getItemId() == R.id.navigation_maps) {
+                replaceFragment( new MapsFragment() );
+                return true;
             } else if (item.getItemId() == R.id.navigation_dashboard) {
                 replaceFragment( new DashboardFragment() );
-                return true;
-            } else if (item.getItemId() == R.id.navigation_rewards) {
-                replaceFragment( new RewardsFragment() );
                 return true;
             } else if (item.getItemId() == R.id.navigation_profile) {
                 replaceFragment( new ProfileFragment() );

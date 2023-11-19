@@ -7,14 +7,14 @@
         android:title="Home" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_maps"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="Dashboard" />
+        android:title="Eco Track" />
 
     <item
-        android:id="@+id/navigation_rewards"
+        android:id="@+id/navigation_dashboard"
         android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="Rewards" />
+        android:title="Dashboard" />
 
     <item
         android:id="@+id/navigation_profile"

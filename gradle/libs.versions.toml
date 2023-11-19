@@ -32,6 +32,7 @@ volley = "1.2.1"
 com-google-android-libraries-mapsplatform-secrets-gradle-plugin = "2.0.1"
 play-services-maps = "18.2.0"
 navigation-fragment = "2.7.5"
+cardview = "1.0.0"
 
 [libraries]
 android-ui = { module = "com.github.markushi:android-ui", version.ref = "android-ui" }
@@ -69,6 +70,7 @@ screenshotty = { module = "eu.bolt:screenshotty", version.ref = "screenshotty" }
 volley = { module = "com.android.volley:volley", version.ref = "volley" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "play-services-maps" }
 androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigation-fragment" }
+androidx-cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
