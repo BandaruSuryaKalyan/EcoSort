@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">EcoSort</string>
     <string name="default_web_client_id">96599841147-h4md9k9sdataf7h18h7vlk2n8pa189sj.apps.googleusercontent.com</string>
+    <string name="MapsAPIKey">AIzaSyDLt42dstvHdUMtYYaIMqA9FdPxOYal42M</string>
 </resources>
