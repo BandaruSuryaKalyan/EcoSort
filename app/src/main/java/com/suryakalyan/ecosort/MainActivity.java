@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     RewardsFragment rewardsFragment = new RewardsFragment();
     ProfileFragment profileFragment = new ProfileFragment();
     MapsFragment mapsFragment = new MapsFragment();
+    ManualCaptureFragment manualCaptureFragment = new ManualCaptureFragment();
+    
     
     boolean PermissionsFlag = false;
     
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         
         
         bottomNavigationView = findViewById( R.id.bottom_nav_view );
-        getSupportFragmentManager().beginTransaction().replace( R.id.nav_host_fragment_activity_main, mapsFragment ).commit();
+        getSupportFragmentManager().beginTransaction().replace( R.id.nav_host_fragment_activity_main, manualCaptureFragment ).commit();
         
         bottomNavigationView.setOnItemSelectedListener( item -> {
             if (item.getItemId() == R.id.navigation_home) {

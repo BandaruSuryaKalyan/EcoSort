@@ -66,6 +66,9 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.1.1')
     implementation libs.firebase.analytics
 
+    //location
+    implementation libs.play.services.location
+
     //Dependencies for ScreenShot
     implementation libs.falcon
     implementation libs.android.ui
