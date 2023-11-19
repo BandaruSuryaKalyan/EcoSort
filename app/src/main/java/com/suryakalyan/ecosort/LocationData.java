@@ -1,5 +1,6 @@
 package com.suryakalyan.ecosort;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
 import java.text.SimpleDateFormat;
@@ -12,7 +13,11 @@ public class LocationData implements ClusterItem {
     private double latitude;
     private double longitude;
     
-    // Modified constructor with name, latitude, and longitude parameters
+    // Default constructor required by Firebase
+    public LocationData() {
+    }
+    
+    // Constructor with name, latitude, and longitude parameters
     public LocationData(String name, double latitude, double longitude) {
         this.name = name;
         this.latitude = latitude;
@@ -38,5 +43,20 @@ public class LocationData implements ClusterItem {
     
     public double getLongitude() {
         return longitude;
+    }
+    
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(latitude, longitude);
+    }
+    
+    @Override
+    public String getTitle() {
+        return name;
+    }
+    
+    @Override
+    public String getSnippet() {
+        return dateTime;
     }
 }

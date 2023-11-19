@@ -9,6 +9,7 @@ androidx-junit = "1.1.2"
 androidx-runner = "1.4.0"
 androidx-test-ext-junit2 = "1.1.3"
 com-google-android-material-material = "1.3.0"
+com-google-maps-android-android-maps-utils = "0.6.2"
 falcon = "2.2.0"
 firebase-analytics = "21.5.0"
 firebase-auth = "22.2.0"
@@ -16,6 +17,7 @@ firebase-core = "21.1.1"
 firebase-crashlytics-ktx = "18.5.1"
 firebase-database = "20.3.0"
 firebase-perf-ktx = "20.5.0"
+google-android-maps-utils = "2.4.0"
 google-material = "1.9.0"
 google-play-services-location = "18.0.0"
 junit = "4.13.2"
@@ -39,6 +41,8 @@ cardview = "1.0.0"
 
 [libraries]
 android-maps-utils = { module = "com.google.maps.android:android-maps-utils", version.ref = "android-maps-utils" }
+android-maps-utils-v062 = { module = "com.google.maps.android:android-maps-utils", version.ref = "com-google-maps-android-android-maps-utils" }
+android-maps-utils-v240 = { module = "com.google.maps.android:android-maps-utils", version.ref = "google-android-maps-utils" }
 android-ui = { module = "com.github.markushi:android-ui", version.ref = "android-ui" }
 androidx-appcompat-v120 = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-constraintlayout-v204 = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout" }
