@@ -5,6 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -41,14 +42,6 @@ public class ManualCaptureFragment extends Fragment {
         super.onCreate( savedInstanceState );
         
         fusedLocationClient = LocationServices.getFusedLocationProviderClient( requireActivity() );
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult( LocationResult locationResult ) {
-                if (locationResult != null) {
-                    handleLocationResult( locationResult.getLastLocation() );
-                }
-            }
-        };
         
         database = FirebaseDatabase.getInstance().getReference();
     }
@@ -67,23 +60,36 @@ public class ManualCaptureFragment extends Fragment {
                 
                 if (isGpsEnabled && !isLocationRequestInProgress) {
                     isLocationRequestInProgress = true;
-                    startLocationUpdates();
+                    getUserCurrentLocationOnes();
                 }
             }
         } );
         return view;
     }
     
-    private void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission( requireContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission( requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
+    private void getUserCurrentLocationOnes() {
+        if (ActivityCompat.checkSelfPermission(requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(requireContext(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        fusedLocationClient.requestLocationUpdates( createLocationRequest(), locationCallback, null );
-    }
-    
-    private void stopLocationUpdates() {
-        fusedLocationClient.removeLocationUpdates( locationCallback );
+        
+        LocationRequest request = new LocationRequest();
+        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        request.setNumUpdates(2);
+        
+        // Request single location update
+        fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        handleLocationResult(location);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure to get location
+                    isLocationRequestInProgress = false; // Enable the button even if location request fails
+                });
     }
     
     private void handleLocationResult( android.location.Location location ) {
@@ -99,14 +105,8 @@ public class ManualCaptureFragment extends Fragment {
             
             database.child( "Live Locations" ).child( userId ).push().setValue( locationData );
             
-            stopLocationUpdates();
             isLocationRequestInProgress = false;
         }
     }
     
-    private LocationRequest createLocationRequest() {
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setPriority( LocationRequest.PRIORITY_HIGH_ACCURACY );
-        return locationRequest;
-    }
 }

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,11 +23,18 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
     
     private GoogleMap mMap;
     CardView cardView;
+    private CardView infoCard;
+    private TextView nameTextView;
+    private TextView timeTextView;
+    private TextView addressTextView;
+    
+    private ClusterManager<LocationData> clusterManager;
     
     @Nullable
     @Override

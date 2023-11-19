@@ -67,7 +67,7 @@ dependencies {
     implementation libs.firebase.analytics
 
     //location
-    implementation libs.play.services.location
+    implementation libs.play.services.location.v1800
 
     //Dependencies for ScreenShot
     implementation libs.falcon
@@ -89,5 +89,9 @@ dependencies {
 
     //NavBar
     implementation libs.androidx.navigation.ui
+
+    //MarkerClusterer
+    implementation libs.android.maps.utils
+
 
 }

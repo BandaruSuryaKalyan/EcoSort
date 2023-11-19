@@ -1,5 +1,6 @@
 [versions]
 agp = "8.3.0-alpha03"
+android-maps-utils = "0.5"
 android-ui = "1.2"
 androidx-appcompat = "1.2.0"
 androidx-constraintlayout = "2.0.4"
@@ -16,6 +17,7 @@ firebase-crashlytics-ktx = "18.5.1"
 firebase-database = "20.3.0"
 firebase-perf-ktx = "20.5.0"
 google-material = "1.9.0"
+google-play-services-location = "18.0.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
@@ -36,6 +38,7 @@ navigation-fragment = "2.7.5"
 cardview = "1.0.0"
 
 [libraries]
+android-maps-utils = { module = "com.google.maps.android:android-maps-utils", version.ref = "android-maps-utils" }
 android-ui = { module = "com.github.markushi:android-ui", version.ref = "android-ui" }
 androidx-appcompat-v120 = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-constraintlayout-v204 = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout" }
@@ -68,6 +71,7 @@ material-v190 = { module = "com.google.android.material:material", version.ref =
 multidex = { module = "com.android.support:multidex", version.ref = "multidex" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "play-services-auth" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
+play-services-location-v1800 = { module = "com.google.android.gms:play-services-location", version.ref = "google-play-services-location" }
 screenshotty = { module = "eu.bolt:screenshotty", version.ref = "screenshotty" }
 volley = { module = "com.android.volley:volley", version.ref = "volley" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "play-services-maps" }

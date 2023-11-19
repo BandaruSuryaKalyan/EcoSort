@@ -1,10 +1,12 @@
 package com.suryakalyan.ecosort;
 
+import com.google.maps.android.clustering.ClusterItem;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class LocationData {
+public class LocationData implements ClusterItem {
     private String name;
     private String dateTime;
     private double latitude;
