@@ -14,7 +14,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
+        android:visibility="invisible"
         app:lottie_rawRes="@raw/bike_loading2" />
+
+
+    <ImageView
+        android:id="@+id/textImageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/AutomaticCapture"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/AutomaticCapture"
