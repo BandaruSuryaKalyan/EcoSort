@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     ProfileFragment profileFragment = new ProfileFragment();
     MapsFragment mapsFragment = new MapsFragment();
     ManualCaptureFragment manualCaptureFragment = new ManualCaptureFragment();
+    AutomaticModeCapturing automaticModeCapturing= new AutomaticModeCapturing();
     
     
     boolean PermissionsFlag = true;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         
         
         bottomNavigationView = findViewById( R.id.bottom_nav_view );
-        getSupportFragmentManager().beginTransaction().replace( R.id.nav_host_fragment_activity_main, manualCaptureFragment ).commit();
+        getSupportFragmentManager().beginTransaction().replace( R.id.nav_host_fragment_activity_main, automaticModeCapturing ).commit();
         
         bottomNavigationView.setOnItemSelectedListener( item -> {
             if (item.getItemId() == R.id.navigation_home) {

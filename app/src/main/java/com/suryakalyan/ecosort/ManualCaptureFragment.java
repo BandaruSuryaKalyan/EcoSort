@@ -107,6 +107,7 @@ public class ManualCaptureFragment extends Fragment {
                 verifyCaptcha();
             }
         } );
+        
         return view;
     }
     
