@@ -2,13 +2,17 @@
 agp = "8.3.0-alpha03"
 android-maps-utils = "0.5"
 android-ui = "1.2"
+android-volley = "1.0.0"
 androidx-appcompat = "1.2.0"
+androidx-appcompat-appcompat = "1.3.1"
 androidx-constraintlayout = "2.0.4"
 androidx-espresso-core = "3.3.0"
 androidx-junit = "1.1.2"
 androidx-runner = "1.4.0"
 androidx-test-ext-junit2 = "1.1.3"
+com-google-android-gms-play-services-safetynet = "15.0.1"
 com-google-android-material-material = "1.3.0"
+com-google-android-material-material2 = "1.4.0"
 com-google-maps-android-android-maps-utils = "0.6.2"
 falcon = "2.2.0"
 firebase-analytics = "21.5.0"
@@ -20,6 +24,8 @@ firebase-perf-ktx = "20.5.0"
 google-android-maps-utils = "2.4.0"
 google-material = "1.9.0"
 google-play-services-location = "18.0.0"
+google-play-services-safetynet = "17.0.1"
+google-recaptcha = "1.3.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
@@ -30,6 +36,8 @@ constraintlayout = "2.1.4"
 multidex = "1.0.3"
 play-services-auth = "20.7.0"
 play-services-location = "21.0.1"
+play-services-safetynet = "18.0.1"
+recaptcha = "18.3.0"
 runner = "1.5.2"
 screenshotty = "1.0.4"
 ui-test-junit4 = "1.5.4"
@@ -45,6 +53,7 @@ android-maps-utils-v062 = { module = "com.google.maps.android:android-maps-utils
 android-maps-utils-v240 = { module = "com.google.maps.android:android-maps-utils", version.ref = "google-android-maps-utils" }
 android-ui = { module = "com.github.markushi:android-ui", version.ref = "android-ui" }
 androidx-appcompat-v120 = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+androidx-appcompat-v131 = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat-appcompat" }
 androidx-constraintlayout-v204 = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-espresso-core-v330 = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-espresso-core" }
 androidx-junit-v112 = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
@@ -71,16 +80,23 @@ lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 material-v130 = { module = "com.google.android.material:material", version.ref = "com-google-android-material-material" }
+material-v140 = { module = "com.google.android.material:material", version.ref = "com-google-android-material-material2" }
 material-v190 = { module = "com.google.android.material:material", version.ref = "google-material" }
 multidex = { module = "com.android.support:multidex", version.ref = "multidex" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "play-services-auth" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
 play-services-location-v1800 = { module = "com.google.android.gms:play-services-location", version.ref = "google-play-services-location" }
+play-services-safetynet = { module = "com.google.android.gms:play-services-safetynet", version.ref = "play-services-safetynet" }
+play-services-safetynet-v1501 = { module = "com.google.android.gms:play-services-safetynet", version.ref = "com-google-android-gms-play-services-safetynet" }
+play-services-safetynet-v1701 = { module = "com.google.android.gms:play-services-safetynet", version.ref = "google-play-services-safetynet" }
+recaptcha = { module = "com.google.android.recaptcha:recaptcha", version.ref = "recaptcha" }
+recaptcha-v130 = { module = "com.google.android.recaptcha:recaptcha", version.ref = "google-recaptcha" }
 screenshotty = { module = "eu.bolt:screenshotty", version.ref = "screenshotty" }
 volley = { module = "com.android.volley:volley", version.ref = "volley" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "play-services-maps" }
 androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigation-fragment" }
 androidx-cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
+volley-v100 = { module = "com.android.volley:volley", version.ref = "android-volley" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

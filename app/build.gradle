@@ -54,9 +54,8 @@ dependencies {
     androidTestImplementation libs.androidx.runner.v140
     androidTestImplementation libs.androidx.junit.v113
     androidTestImplementation libs.androidx.ui.test.junit4
-
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation libs.volley
+
 
     //firebase Access
     implementation libs.firebase.core
@@ -92,6 +91,15 @@ dependencies {
 
     //MarkerClusterer
     implementation libs.android.maps.utils.v240
+
+    //reCAPTCHA
+    implementation libs.material.v140
+    implementation libs.play.services.safetynet.v1501
+    implementation 'com.android.volley:volley:1.2.0'
+    implementation 'com.google.android.gms:play-services-recaptcha:17.0.1'
+
+
+
 
 
 
