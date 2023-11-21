@@ -32,7 +32,7 @@ public class HomeFragment extends Fragment {
             }
         } );
         
-        manualPhotoButton.setOnClickListener( new View.OnClickListener() {
+        automaticPhotoButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View view ) {
                 requireActivity().getSupportFragmentManager().beginTransaction().replace( R.id.nav_host_fragment_activity_main, automaticModeCapturing ).commit();

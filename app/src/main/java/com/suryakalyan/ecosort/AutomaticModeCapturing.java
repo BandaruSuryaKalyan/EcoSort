@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -14,6 +16,7 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.TotalCaptureResult;
+import android.icu.text.SimpleDateFormat;
 import android.media.Image;
 import android.media.ImageReader;
 import android.net.Uri;
@@ -30,21 +33,25 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 
 public class AutomaticModeCapturing extends Fragment {
     
@@ -66,6 +73,7 @@ public class AutomaticModeCapturing extends Fragment {
     private ImageReader imageReader;
     private CameraDevice cameraDevice;
     private ImageView textImageView;
+    private File autoCaptureTempFile;
     
     private String[] Permissions = { android.Manifest.permission.READ_EXTERNAL_STORAGE,
             android.Manifest.permission.CAMERA, android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -88,7 +96,7 @@ public class AutomaticModeCapturing extends Fragment {
         automaticCaptureButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View view ) {
-                startCapturing();
+                initializeCamera();
             }
         } );
         
@@ -109,7 +117,7 @@ public class AutomaticModeCapturing extends Fragment {
     public void onRequestPermissionsResult( int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults ) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[ 0 ] == PackageManager.PERMISSION_GRANTED) {
-                startCapturing();
+                initializeCamera();
             } else {
                 Toast.makeText( requireContext(), "Permission denied. Cannot capture images.", Toast.LENGTH_SHORT ).show();
             }
@@ -135,7 +143,6 @@ public class AutomaticModeCapturing extends Fragment {
         @Override
         public void run() {
             if (capturingEnabled) {
-                initializeCamera();
                 captureHandler.postDelayed( this, CAPTURE_INTERVAL );
             }
         }
@@ -172,7 +179,9 @@ public class AutomaticModeCapturing extends Fragment {
         @Override
         public void onOpened( @NonNull CameraDevice camera ) {
             cameraDevice = camera;
-            createCameraPreview();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                createCameraPreview();
+            }
         }
         
         @Override
@@ -187,68 +196,108 @@ public class AutomaticModeCapturing extends Fragment {
             cameraDevice = null;
         }
     };
+    
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     private void createCameraPreview() {
         try {
-            imageReader = ImageReader.newInstance(imageWidth, imageHeight, ImageFormat.JPEG, 1);
-            imageReader.setOnImageAvailableListener(onImageAvailableListener, null);
+            imageReader = ImageReader.newInstance( imageWidth, imageHeight, ImageFormat.JPEG, 20 );
+            imageReader.setOnImageAvailableListener( onImageAvailableListener, null );
             
             final CaptureRequest.Builder captureBuilder =
-                    cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-            captureBuilder.addTarget(imageReader.getSurface());
-            captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+                    cameraDevice.createCaptureRequest( CameraDevice.TEMPLATE_STILL_CAPTURE );
+            captureBuilder.addTarget( imageReader.getSurface() );
+            captureBuilder.set( CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO );
             
-            cameraDevice.createCaptureSession( Arrays.asList(imageReader.getSurface()),
+            // Set auto exposure mode
+            captureBuilder.set( CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_AE_MODE_OFF );
+            captureBuilder.set( CaptureRequest.SENSOR_SENSITIVITY, 300 );
+            captureBuilder.set( CaptureRequest.SENSOR_EXPOSURE_TIME, 250000000L );
+            // Set auto focus mode
+            captureBuilder.set( CaptureRequest.CONTROL_AF_MODE, CameraMetadata.CONTROL_AF_MODE_CONTINUOUS_PICTURE );
+            // Set auto white balance mode
+            captureBuilder.set( CaptureRequest.CONTROL_AWB_MODE, CameraMetadata.CONTROL_AWB_MODE_AUTO );
+            
+            captureBuilder.set( CaptureRequest.CONTROL_SCENE_MODE, CameraMetadata.NOISE_REDUCTION_MODE_HIGH_QUALITY );
+            
+            captureBuilder.set( CaptureRequest.CONTROL_SCENE_MODE, CameraMetadata.COLOR_CORRECTION_ABERRATION_MODE_HIGH_QUALITY );
+            
+            captureBuilder.set( CaptureRequest.CONTROL_SCENE_MODE, CameraMetadata.CONTROL_SCENE_MODE_HDR );
+            
+            
+            cameraDevice.createCaptureSession( Arrays.asList( imageReader.getSurface() ),
                     new CameraCaptureSession.StateCallback() {
                         @Override
-                        public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
+                        public void onConfigured( @NonNull CameraCaptureSession cameraCaptureSession ) {
                             try {
-                                cameraCaptureSession.capture(captureBuilder.build(), captureCallback, null);
+                                cameraCaptureSession.capture( captureBuilder.build(), captureCallback, null );
                             } catch (CameraAccessException e) {
                                 e.printStackTrace();
                             }
                         }
                         
                         @Override
-                        public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
+                        public void onConfigureFailed( @NonNull CameraCaptureSession cameraCaptureSession ) {
                         }
-                    }, null);
+                    }, null );
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
     }
+    
     private ImageReader.OnImageAvailableListener onImageAvailableListener = new ImageReader.OnImageAvailableListener() {
         @Override
-        public void onImageAvailable(ImageReader reader) {
+        public void onImageAvailable( ImageReader reader ) {
             Image image = reader.acquireLatestImage();
             if (image != null) {
-                processCapturedImage(image);
+                processCapturedImage( image );
                 image.close();
             }
         }
     };
-    private void processCapturedImage(Image image) {
-        // Convert the Image to a Bitmap
-        Bitmap bitmap = convertImageToBitmap(image);
-        textImageView.setImageBitmap(bitmap);
-        // uploadImageToFirebase(bitmap);
-    }
     
-    private Bitmap convertImageToBitmap(Image image) {
+    private void processCapturedImage( Image image ) {
+        
         ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-        byte[] bytes = new byte[buffer.remaining()];
-        buffer.get(bytes);
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        byte[] imageData = new byte[buffer.remaining()];
+        buffer.get(imageData);
+        
+        Bitmap bitmap = BitmapFactory.decodeByteArray( imageData, 0, imageData.length );
+        textImageView.setImageBitmap( bitmap );
+        
+        // Create or reuse the file to store the image
+        // Create or reuse the file in the specific folder to store the image
+        if (autoCaptureTempFile == null) {
+            File autoCapturesFolder = new File(requireContext().getExternalFilesDir(null), "AutoCaptures");
+            if (!autoCapturesFolder.exists()) {
+                autoCapturesFolder.mkdirs();
+            }
+            autoCaptureTempFile = new File(autoCapturesFolder, "autoCapTempImage.jpg");
+        }
+        
+        try {
+            // Append the new image data to the existing file
+            FileOutputStream fos = new FileOutputStream(autoCaptureTempFile, false);
+            fos.write(imageData);
+            fos.close();
+            
+            // Upload the entire file to Firebase (if needed)
+            Uri fileUri = FileProvider.getUriForFile(requireContext(), requireContext().getPackageName() + ".provider", autoCaptureTempFile);
+            uploadImageToFirebase(fileUri);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     private CameraCaptureSession.CaptureCallback captureCallback = new CameraCaptureSession.CaptureCallback() {
         @Override
-        public void onCaptureCompleted(@NonNull CameraCaptureSession session,
-                                       @NonNull CaptureRequest request,
-                                       @NonNull TotalCaptureResult result) {
-            super.onCaptureCompleted(session, request, result);
+        public void onCaptureCompleted( @NonNull CameraCaptureSession session,
+                                        @NonNull CaptureRequest request,
+                                        @NonNull TotalCaptureResult result ) {
+            super.onCaptureCompleted( session, request, result );
             closeCamera();
         }
     };
+    
     private void closeCamera() {
         if (cameraDevice != null) {
             cameraDevice.close();
@@ -257,29 +306,31 @@ public class AutomaticModeCapturing extends Fragment {
     }
     
     
-    
-    private void uploadImageToFirebase(Image image) {
-        Uri fileUri = Uri.fromFile( currentImageFile );
-        StorageReference imageRef = storageRef.child( "images/" + currentImageFile.getName() );
+    private void uploadImageToFirebase(Uri imageUri) {
+        String timeStamp = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            timeStamp = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss", Locale.getDefault()).format(new Date());
+        }
+        String fileName = "IMG_" + timeStamp + ".jpg";
         
-        imageRef.putFile( fileUri )
-                .addOnSuccessListener( new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess( UploadTask.TaskSnapshot taskSnapshot ) {
-                        // Image uploaded successfully
-                        Log.d( TAG, "Image uploaded to Firebase" );
-                        // Optionally, you can do further processing or update UI here
-                    }
-                } )
-                .addOnFailureListener( new OnFailureListener() {
-                    @Override
-                    public void onFailure( @NonNull Exception e ) {
-                        // Handle unsuccessful uploads
-                        Log.e( TAG, "Error uploading image to Firebase: " + e.getMessage() );
-                        // Optionally, you can display an error message to the user
-                    }
-                } );
+        // Create a StorageReference with a path and filename
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("images/" + fileName);
+        
+        // Upload the image file to Firebase Storage
+        storageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    // Handle successful upload
+                    Log.d(TAG, "Image uploaded to Firebase Storage");
+                    Toast.makeText( getContext(), "Image Uploaded.", Toast.LENGTH_SHORT ).show();
+                })
+                .addOnFailureListener(exception -> {
+                    // Handle failed upload
+                    Log.e(TAG, "Error uploading image to Firebase Storage: " + exception.getMessage());
+                    Toast.makeText( getContext(), "Upload Failed.", Toast.LENGTH_SHORT ).show();
+                });
     }
+    
+    
     
     @Override
     public void onDestroy() {

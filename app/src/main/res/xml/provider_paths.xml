@@ -4,6 +4,6 @@
         name="external_files"
         path="AutoCaptures" />
     <external-path
-        name="external_storage_root"
+        name="external_files_shared"
         path="." />
 </paths>
