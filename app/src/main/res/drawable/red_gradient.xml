@@ -1,0 +1,24 @@
+<!-- res/drawable/custom_button_background.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Black border -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="5px"
+                android:color="#000000" />
+            <corners android:radius="50dp" />
+        </shape>
+    </item>
+    <!-- Red gradient background -->
+    <item android:left="5px" android:right="5px" android:top="5px" android:bottom="5px">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#FF0000"
+                android:endColor="#800000"
+                android:type="linear"
+                android:angle="90"/>
+            <corners android:radius="45dp" />
+        </shape>
+    </item>
+</layer-list>

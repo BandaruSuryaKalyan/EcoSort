@@ -55,6 +55,16 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.login_activity );
         
+        SharedPreferences preference = getApplicationContext().getSharedPreferences(
+                "UserLoginActivity", MODE_PRIVATE );
+        boolean checkLoginStatus = preference.getBoolean( "login", false );
+        
+        if(checkLoginStatus){
+            Intent mainActivityIntent = new Intent(LoginActivity.this,MainActivity.class);
+            startActivity( mainActivityIntent );
+            finish();
+        }
+        
         underTheCard = findViewById( R.id.illustration_under_card_view );
         titleTextView = findViewById( R.id.title );
         createAccountTextView = findViewById( R.id.text_view_create_account );

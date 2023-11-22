@@ -48,6 +48,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class ManualCaptureFragment extends Fragment {
     
@@ -123,10 +124,12 @@ public class ManualCaptureFragment extends Fragment {
                 android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+        
+        String uuid = UUID.randomUUID().toString();
         fusedLocationClient.getCurrentLocation( LocationRequest.PRIORITY_HIGH_ACCURACY, null )
                 .addOnSuccessListener( location -> {
                     if (location != null) {
-                        handleLocationResult( location );
+                        handleLocationResult( location,uuid );
                     }
                 } )
                 .addOnFailureListener( e -> {
@@ -135,13 +138,13 @@ public class ManualCaptureFragment extends Fragment {
                 } );
     }
     
-    private void handleLocationResult( android.location.Location location ) {
+    private void handleLocationResult( android.location.Location location,String uuid) {
         if (location != null) {
             
             SharedPreferences preference = getContext().getSharedPreferences( "UserLoginActivity", MODE_PRIVATE );
             String userId = preference.getString( "UserEmailPref", "Unknown Users" );
             
-            LocationData locationData = new LocationData(
+            LocationData locationData = new LocationData(uuid,
                     userId, location.getLatitude(),
                     location.getLongitude()
             );

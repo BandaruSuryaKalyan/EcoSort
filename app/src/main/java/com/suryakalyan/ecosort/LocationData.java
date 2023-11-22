@@ -10,6 +10,7 @@ import java.util.Locale;
 public class LocationData implements ClusterItem {
     private String name;
     private String dateTime;
+    private String uuid;
     private double latitude;
     private double longitude;
     
@@ -18,17 +19,22 @@ public class LocationData implements ClusterItem {
     }
     
     // Constructor with name, latitude, and longitude parameters
-    public LocationData(String name, double latitude, double longitude) {
+    public LocationData( String uuid, String name, double latitude, double longitude ) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.uuid = uuid;
         
         // Format the current date and time
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.US);
-        this.dateTime = sdf.format(new Date());
+        SimpleDateFormat sdf = new SimpleDateFormat( "dd-MM-yyyy HH:mm:ss", Locale.US );
+        this.dateTime = sdf.format( new Date() );
     }
     
     // Getters for Firebase
+    public String getUuid() {
+        return uuid;
+    }
+    
     public String getName() {
         return name;
     }
@@ -47,7 +53,7 @@ public class LocationData implements ClusterItem {
     
     @Override
     public LatLng getPosition() {
-        return new LatLng(latitude, longitude);
+        return new LatLng( latitude, longitude );
     }
     
     @Override
