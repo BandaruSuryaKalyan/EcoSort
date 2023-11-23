@@ -10,42 +10,40 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.LocationViewHolder> {
+// FeedAdapter.java
+public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder> {
     
-    private List<LocationData> feedList;
+    private final List<LocationData> locationDataList;
     
-    public FeedAdapter( List<LocationData> feedList ) {
-        this.feedList = feedList;
+    public FeedAdapter( List<LocationData> locationDataList ) {
+        this.locationDataList = locationDataList;
     }
     
     @NonNull
     @Override
-    public LocationViewHolder onCreateViewHolder( @NonNull ViewGroup parent, int viewType ) {
+    public FeedViewHolder onCreateViewHolder( @NonNull ViewGroup parent, int viewType ) {
         View view = LayoutInflater.from( parent.getContext() ).inflate( R.layout.item_dashboard_card, parent, false );
-        return new LocationViewHolder( view );
+        return new FeedViewHolder( view );
     }
     
     @Override
-    public void onBindViewHolder( @NonNull LocationViewHolder holder, int position ) {
-        LocationData locationData = feedList.get( position );
+    public void onBindViewHolder( @NonNull FeedViewHolder holder, int position ) {
+        LocationData locationData = locationDataList.get( position );
         holder.bindData( locationData );
     }
     
     @Override
     public int getItemCount() {
-        return feedList.size();
+        return locationDataList.size();
     }
     
-    static class LocationViewHolder extends RecyclerView.ViewHolder {
+    public static class FeedViewHolder extends RecyclerView.ViewHolder {
         
-        private TextView textViewComplainer;
-        private TextView textViewDateTime;
-        private TextView textViewLatitude;
-        private TextView textViewLongitude;
-        private TextView textViewAddress;
+        private TextView textViewComplainer, textViewDateTime, textViewLatitude, textViewLongitude, textViewAddress;
         
-        public LocationViewHolder( @NonNull View itemView ) {
+        public FeedViewHolder( @NonNull View itemView ) {
             super( itemView );
+            
             textViewComplainer = itemView.findViewById( R.id.textViewComplainer );
             textViewDateTime = itemView.findViewById( R.id.textViewDateTimeValue );
             textViewLatitude = itemView.findViewById( R.id.textViewLatitudeValue );
@@ -53,13 +51,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.LocationViewHo
             textViewAddress = itemView.findViewById( R.id.textViewAddressValue );
         }
         
-        public void bindData( LocationData locationData ) {
-            textViewComplainer.setText( locationData.getTitle() );
-            textViewDateTime.setText( locationData.getSnippet() );
-            textViewLatitude.setText( String.valueOf( locationData.getPosition().latitude ) );
-            textViewLongitude.setText( String.valueOf( locationData.getPosition().longitude ) );
-            textViewAddress.setText( locationData.getAddress() );
-            
+        public void bindData( LocationData model ) {
+            // Bind data to the views
+            textViewComplainer.setText( ( model.getTitle() != null ? model.getTitle() : "-" ) );
+            textViewDateTime.setText( model.getSnippet() );
+            textViewLatitude.setText( ( model.getPosition() != null ? model.getPosition().latitude : "-" ).toString() );
+            textViewLongitude.setText( ( model.getPosition() != null ? model.getPosition().longitude : "-" ).toString() );
+            textViewAddress.setText( ( model.getAddress() != null ? model.getAddress() : "-" ) );
         }
     }
 }

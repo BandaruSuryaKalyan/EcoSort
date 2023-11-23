@@ -22,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,7 +51,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     
     private ClusterManager<MyMarkerClass> clusterManager;
     private MyMarkerClass myMarkerClass;
-    private boolean isInfoCardVisible = false;
+    private boolean isInfoCardVisible = true;
     private static final int MIN_CLUSTER_SIZE = 1;
     
     @Nullable
@@ -75,18 +76,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         
         infoCard.setVisibility( View.GONE );
         
-        // Handle navigation button click
-//        navigateButton.setOnClickListener(v -> {
-//            // Open Google Maps with the selected location
-//            // Replace latitude and longitude with the actual values from the selected marker
-//            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + selectedLocation.getLatitude() + "," + selectedLocation.getLongitude());
-//            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-//            mapIntent.setPackage("com.google.android.apps.maps");
-//            if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
-//                startActivity(mapIntent);
-//            }
-//        });
-        
         return view;
     }
     
@@ -103,6 +92,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         
         /// Set custom renderer for cluster colors
         CustomClusterRenderer customClusterRenderer = new CustomClusterRenderer( getContext(), mMap, clusterManager );
+        customClusterRenderer.setMinClusterSize( MIN_CLUSTER_SIZE );
         clusterManager.setRenderer( customClusterRenderer );
         
         // Read locations from Firebase
@@ -117,10 +107,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 // Get locations from snapshot
                 for (DataSnapshot userSnapshots : dataSnapshot.getChildren()) {
                     for (DataSnapshot snapshot : userSnapshots.getChildren()) {
-                        
                         LocationData location = snapshot.getValue( LocationData.class );
                         MyMarkerClass marker = new MyMarkerClass( location );
                         clusterManager.addItem( marker );
+                        
+                        // Add markers directly to the map
+//                        mMap.addMarker(new MarkerOptions()
+//                                .position(new LatLng(location.getLatitude(), location.getLongitude()))
+//                                .title(location.getTitle())
+//                                .snippet(location.getSnippet()));
                     }
                 }
                 // Cluster markers
@@ -140,7 +135,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             // Zoom in on cluster
             mMap.animateCamera( CameraUpdateFactory.newLatLngZoom(
                     cluster.getPosition(),
-                    (float) Math.floor( mMap.getCameraPosition().zoom + 5 ) ) );
+                    (float) Math.floor( mMap.getCameraPosition().zoom + 10 ) ) );
             return true;
         } );
         
@@ -182,20 +177,40 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 Address address = addresses.get( 0 );
                 StringBuilder addressStringBuilder = new StringBuilder();
                 
-                // Add relevant address details (customize as needed)
+                // Recipient Name
                 if (address.getSubThoroughfare() != null) {
-                    addressStringBuilder.append( address.getSubThoroughfare() ).append( ", " );
+                    addressStringBuilder.append( "Recipient Name: " ).append( address.getSubThoroughfare() ).append( "\n" );
                 }
+                
+                // Building or Apartment Number
+                if (address.getPremises() != null) {
+                    addressStringBuilder.append( "Building or Apartment Number: " ).append( address.getPremises() ).append( "\n" );
+                }
+                
+                // Street Name
                 if (address.getThoroughfare() != null) {
-                    addressStringBuilder.append( address.getThoroughfare() ).append( ", " );
+                    addressStringBuilder.append( "Street Name: " ).append( address.getThoroughfare() ).append( "\n" );
                 }
+                
+                // City
                 if (address.getLocality() != null) {
-                    addressStringBuilder.append( address.getLocality() ).append( ", " );
+                    addressStringBuilder.append( "City: " ).append( address.getLocality() ).append( "\n" );
                 }
+                
+                // State or Province
+                if (address.getAdminArea() != null) {
+                    addressStringBuilder.append( "State or Province: " ).append( address.getAdminArea() ).append( "\n" );
+                }
+                
+                // Postal Code
                 if (address.getPostalCode() != null) {
-                    addressStringBuilder.append( address.getPostalCode() ).append( ", " );
+                    addressStringBuilder.append( "Postal Code: " ).append( address.getPostalCode() ).append( "\n" );
                 }
-                // Add other details like sub-locality, postal code, etc.
+                
+                // Country
+                if (address.getCountryName() != null) {
+                    addressStringBuilder.append( "Country: " ).append( address.getCountryName() ).append( "\n" );
+                }
                 
                 return addressStringBuilder.toString();
             }
@@ -204,6 +219,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
         return "Address not available";
     }
+    
     
     private void updateHeatmap() {
         // Generate WeightedLatLng list based on your marker data
