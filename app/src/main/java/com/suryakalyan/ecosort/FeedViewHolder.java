@@ -40,8 +40,5 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
         textViewLongitude.setText("Longitude: " + (model.getPosition() != null ? model.getPosition().longitude : ""));
         textViewAddress.setText("Address: " + (model.getAddress() != null ? model.getAddress() : ""));
         
-        // Handle image loading using Glide or Picasso for imageViewUpvote, imageViewDownvote, imageViewShare
-        // Example:
-        // Glide.with(itemView.getContext()).load(model.getImageUrl()).into(imageViewUpvote);
     }
 }

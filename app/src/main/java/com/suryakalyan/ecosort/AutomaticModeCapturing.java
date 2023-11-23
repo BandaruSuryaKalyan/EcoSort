@@ -47,6 +47,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -358,8 +359,8 @@ public class AutomaticModeCapturing extends Fragment {
                 fos.close();
                 
                 // Upload the entire file to Firebase (if needed)
-                // Uri fileUri = FileProvider.getUriForFile(requireContext(), "com.suryakalyan.ecosort" + ".provider", autoCaptureTempFile);
-                // getUserCurrentLocationOnes(autoCaptureTempFile);
+                 Uri fileUri = FileProvider.getUriForFile(requireContext(), "com.suryakalyan.ecosort" + ".provider", autoCaptureTempFile);
+                 getUserCurrentLocationOnes(autoCaptureTempFile);
                 String predictedClass = predictImage( rotatedImageData );
                 Log.d( TAG, "Predicted Class: " + predictedClass );
                 detectionResult.setText( predictedClass );
@@ -376,42 +377,42 @@ public class AutomaticModeCapturing extends Fragment {
     }
     
     
-    private String predictImage(byte[] imageData) {
+    private String predictImage( byte[] imageData ) {
         int inputTensorIndex = 0; // Assuming the input tensor is the first one
-        int[] inputShape = tflite.getInputTensor(inputTensorIndex).shape();
-        int inputWidth = inputShape[1];
-        int inputHeight = inputShape[2];
+        int[] inputShape = tflite.getInputTensor( inputTensorIndex ).shape();
+        int inputWidth = inputShape[ 1 ];
+        int inputHeight = inputShape[ 2 ];
         int inputSize = inputWidth * inputHeight * 3 * 4; // Assuming a 3-channel image with 4 bytes per channel (float)
         
         // Convert the image data to a ByteBuffer
-        Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, inputWidth, inputHeight, true);
+        Bitmap bitmap = BitmapFactory.decodeByteArray( imageData, 0, imageData.length );
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap( bitmap, inputWidth, inputHeight, true );
         
-        ByteBuffer inputBuffer = ByteBuffer.allocateDirect(inputSize);
-        inputBuffer.order(ByteOrder.nativeOrder());
+        ByteBuffer inputBuffer = ByteBuffer.allocateDirect( inputSize );
+        inputBuffer.order( ByteOrder.nativeOrder() );
         inputBuffer.rewind();
         
         // Convert the resized bitmap to a ByteBuffer
-        int[] intValues = new int[inputWidth * inputHeight];
-        resizedBitmap.getPixels(intValues, 0, resizedBitmap.getWidth(), 0, 0, resizedBitmap.getWidth(), resizedBitmap.getHeight());
+        int[] intValues = new int[ inputWidth * inputHeight ];
+        resizedBitmap.getPixels( intValues, 0, resizedBitmap.getWidth(), 0, 0, resizedBitmap.getWidth(), resizedBitmap.getHeight() );
         
         for (int pixelValue : intValues) {
             // Normalize the pixel values if needed
-            float normalizedPixelValue = (pixelValue & 0xFF) / 255.0f;
-            inputBuffer.putFloat(normalizedPixelValue);
+            float normalizedPixelValue = ( pixelValue & 0xFF ) / 255.0f;
+            inputBuffer.putFloat( normalizedPixelValue );
         }
         
         // Rewind the buffer before running inference
         inputBuffer.rewind();
         
         // Run inference
-        float[][] output = new float[1][NUM_CLASSES]; // Assuming one batch and NUM_CLASSES output classes
-        tflite.run(inputBuffer, output);
+        float[][] output = new float[ 1 ][ NUM_CLASSES ]; // Assuming one batch and NUM_CLASSES output classes
+        tflite.run( inputBuffer, output );
         
         // Get the top 3 predictions
-        PriorityQueue<Recognition> pq = new PriorityQueue<>(3, (lhs, rhs) -> Float.compare(rhs.getConfidence(), lhs.getConfidence()));
+        PriorityQueue<Recognition> pq = new PriorityQueue<>( 3, ( lhs, rhs ) -> Float.compare( rhs.getConfidence(), lhs.getConfidence() ) );
         for (int i = 0; i < NUM_CLASSES; i++) {
-            pq.add(new Recognition("" + i, CLASS_LABELS[i], output[0][i], null));
+            pq.add( new Recognition( "" + i, CLASS_LABELS[ i ], output[ 0 ][ i ], null ) );
         }
         
         // Format the results
@@ -419,14 +420,13 @@ public class AutomaticModeCapturing extends Fragment {
         for (int i = 0; i < 3; i++) {
             Recognition recognition = pq.poll();
             if (recognition.getConfidence() > MINIMUM_CONFIDENCE_THRESHOLD) {
-                resultStringBuilder.append(String.format("%s (%.2f%%)\n", recognition.getTitle(), recognition.getConfidence() * 100.0f));
+                resultStringBuilder.append( String.format( "%s (%.2f%%)\n", recognition.getTitle(), recognition.getConfidence() * 100.0f ) );
             }
         }
         
         // Return the formatted result or an empty string
         return resultStringBuilder.toString().isEmpty() ? " " : resultStringBuilder.toString();
     }
-    
     
     
     private ByteBuffer loadModelFile( String filename ) throws IOException {
@@ -548,22 +548,22 @@ public class AutomaticModeCapturing extends Fragment {
     
     private String renameFile( String uuid, File originalFile, double latitude, double longitude ) {
         // Format the timestamp
-        String timeStamp = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            timeStamp = new SimpleDateFormat( "dd-MM-yyyy HH-mm-ss", Locale.getDefault() ).format( new Date() );
-        }
+//        String timeStamp = null;
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+//            timeStamp = new SimpleDateFormat( "dd-MM-yyyy HH-mm-ss", Locale.getDefault() ).format( new Date() );
+//        }
         
         // Construct the new filename with location coordinates
-        String fileName = timeStamp;
+        String fileName = uuid;
         
         // Append latitude and longitude if available
-        if (latitude != 0 && longitude != 0) {
-            fileName += " " + latitude + " " + longitude + "UUID:" + uuid;
-        } else {
-            // Append 0 if location details are not available
-            fileName += " 0 0";
-        }
-        
+//        if (latitude != 0 && longitude != 0) {
+//            fileName += " " + latitude + " " + longitude + " UUID:" + uuid;
+//        } else {
+//            // Append 0 if location details are not available
+//            fileName += " 0 0";
+//        }
+//
         fileName += ".jpg";
         
         return fileName;

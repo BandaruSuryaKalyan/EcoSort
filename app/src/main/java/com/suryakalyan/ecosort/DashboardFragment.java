@@ -1,5 +1,8 @@
 package com.suryakalyan.ecosort;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,8 +43,13 @@ public class DashboardFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         
+        
+        SharedPreferences preference = getContext().getSharedPreferences("UserLoginActivity", MODE_PRIVATE);
+        String userId = preference.getString("UserEmailPref", "Unknown Users");
+        
+        
         locationList = new ArrayList<>();
-        locationAdapter = new FeedAdapter(locationList);
+        locationAdapter = new FeedAdapter(locationList,userId);
         recyclerView.setAdapter(locationAdapter);
         
 //        progressBar = view.findViewById(R.id.inProgress);

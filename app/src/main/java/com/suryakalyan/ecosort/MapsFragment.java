@@ -1,5 +1,8 @@
 package com.suryakalyan.ecosort;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -22,7 +25,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,7 +50,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private TextView addressTextView;
     private AppCompatButton navigateButton;
     private ConstraintLayout map;
-    
     private ClusterManager<MyMarkerClass> clusterManager;
     private MyMarkerClass myMarkerClass;
     private boolean isInfoCardVisible = true;
@@ -83,9 +84,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady( GoogleMap googleMap ) {
         mMap = googleMap;
         
+        
+        SharedPreferences preference = getActivity().getSharedPreferences( "UserLoginActivity", MODE_PRIVATE );
+        String userId = preference.getString( "UserEmailPref", "Unknown Users" );
         // Initialize Firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference locationsRef = database.getReference( "Live Locations" );
+        DatabaseReference locationsRef = database.getReference( "Live Locations" ).child( userId );
         
         // Initialize cluster manager
         clusterManager = new ClusterManager<>( this.getContext(), mMap );
@@ -105,18 +109,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 clusterManager.clearItems();
                 
                 // Get locations from snapshot
-                for (DataSnapshot userSnapshots : dataSnapshot.getChildren()) {
-                    for (DataSnapshot snapshot : userSnapshots.getChildren()) {
-                        LocationData location = snapshot.getValue( LocationData.class );
-                        MyMarkerClass marker = new MyMarkerClass( location );
-                        clusterManager.addItem( marker );
-                        
-                        // Add markers directly to the map
-//                        mMap.addMarker(new MarkerOptions()
-//                                .position(new LatLng(location.getLatitude(), location.getLongitude()))
-//                                .title(location.getTitle())
-//                                .snippet(location.getSnippet()));
-                    }
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    
+                    LocationData location = snapshot.getValue( LocationData.class );
+                    MyMarkerClass marker = new MyMarkerClass( location );
+                    clusterManager.addItem( marker );
                 }
                 // Cluster markers
                 clusterManager.cluster();
@@ -128,6 +125,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 Log.w( "Cluster Marker Addition", "Failed to load locations", error.toException() );
             }
         } );
+        
         
         
         // Handle cluster click

@@ -7,7 +7,7 @@ public class MyMarkerClass implements ClusterItem {
     
     private LocationData location;
     
-    public MyMarkerClass( LocationData location ) {
+    public MyMarkerClass(LocationData location) {
         this.location = location;
     }
     

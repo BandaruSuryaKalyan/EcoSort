@@ -37,6 +37,7 @@ public class LocationData implements ClusterItem {
     public String getUuid() {
         return uuid;
     }
+    
     @Override
     public LatLng getPosition() {
         return new LatLng( latitude, longitude );
