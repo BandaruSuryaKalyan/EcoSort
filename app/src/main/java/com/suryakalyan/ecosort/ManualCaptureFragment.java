@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.RenderEffect;
 import android.graphics.Shader;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,7 +48,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -144,15 +149,47 @@ public class ManualCaptureFragment extends Fragment {
             SharedPreferences preference = getContext().getSharedPreferences( "UserLoginActivity", MODE_PRIVATE );
             String userId = preference.getString( "UserEmailPref", "Unknown Users" );
             
+            String address = getAddressFromLatLng(location.getLatitude(),location.getLongitude());
+            
             LocationData locationData = new LocationData(uuid,
                     userId, location.getLatitude(),
-                    location.getLongitude()
+                    location.getLongitude(),address
             );
             
             database.child( "Live Locations" ).child( userId ).push().setValue( locationData );
             
             isLocationRequestInProgress = false;
         }
+    }
+    private String getAddressFromLatLng( double latitude, double longitude ) {
+        Geocoder geocoder = new Geocoder( getContext(), Locale.getDefault() );
+        try {
+            List<Address> addresses = geocoder.getFromLocation( latitude, longitude, 1 );
+            if (addresses != null && addresses.size() > 0) {
+                Address address = addresses.get( 0 );
+                StringBuilder addressStringBuilder = new StringBuilder();
+                
+                // Add relevant address details (customize as needed)
+                if (address.getSubThoroughfare() != null) {
+                    addressStringBuilder.append( address.getSubThoroughfare() ).append( ", " );
+                }
+                if (address.getThoroughfare() != null) {
+                    addressStringBuilder.append( address.getThoroughfare() ).append( ", " );
+                }
+                if (address.getLocality() != null) {
+                    addressStringBuilder.append( address.getLocality() ).append( ", " );
+                }
+                if (address.getPostalCode() != null) {
+                    addressStringBuilder.append( address.getPostalCode() ).append( ", " );
+                }
+                // Add other details like sub-locality, postal code, etc.
+                
+                return addressStringBuilder.toString();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "Address not available";
     }
     
     private void verifyCaptcha() {

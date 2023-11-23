@@ -1,8 +1,5 @@
 package com.suryakalyan.ecosort;
 
-import static android.content.Context.MODE_PRIVATE;
-
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -97,11 +94,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady( GoogleMap googleMap ) {
         mMap = googleMap;
         
-        SharedPreferences preference = getActivity().getSharedPreferences( "UserLoginActivity", MODE_PRIVATE );
-        String userId = preference.getString( "UserEmailPref", "Unknown Users" );
         // Initialize Firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference locationsRef = database.getReference( "Live Locations" ).child( userId );
+        DatabaseReference locationsRef = database.getReference( "Live Locations" );
         
         // Initialize cluster manager
         clusterManager = new ClusterManager<>( this.getContext(), mMap );
@@ -120,11 +115,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 clusterManager.clearItems();
                 
                 // Get locations from snapshot
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    
-                    LocationData location = snapshot.getValue( LocationData.class );
-                    MyMarkerClass marker = new MyMarkerClass( location );
-                    clusterManager.addItem( marker );
+                for (DataSnapshot userSnapshots : dataSnapshot.getChildren()) {
+                    for (DataSnapshot snapshot : userSnapshots.getChildren()) {
+                        
+                        LocationData location = snapshot.getValue( LocationData.class );
+                        MyMarkerClass marker = new MyMarkerClass( location );
+                        clusterManager.addItem( marker );
+                    }
                 }
                 // Cluster markers
                 clusterManager.cluster();
@@ -153,10 +150,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             LocationData location = myMarkerClass.getLocationData();
             
             // Show in card view
-            nameTextView.setText( location.getName() );
-            timeTextView.setText( location.getDateTime() );
+            nameTextView.setText( location.getTitle() );
+            timeTextView.setText( location.getSnippet() );
             
-            String address = getAddressFromLatLng( location.getLatitude(), location.getLongitude() );
+            String address = getAddressFromLatLng( location.getPosition().latitude,
+                    location.getPosition().longitude );
             addressTextView.setText( address );
             
             mMap.setOnMapClickListener( new GoogleMap.OnMapClickListener() {
@@ -234,6 +232,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             clusterManager.cluster();
         }
     }
+    
     private Gradient heatmapGradient() {
         // Define your heatmap gradient colors
         int[] colors = {

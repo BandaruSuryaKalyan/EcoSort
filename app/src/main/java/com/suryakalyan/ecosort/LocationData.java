@@ -6,6 +6,7 @@ import com.google.maps.android.clustering.ClusterItem;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.PrimitiveIterator;
 
 public class LocationData implements ClusterItem {
     private String name;
@@ -13,17 +14,19 @@ public class LocationData implements ClusterItem {
     private String uuid;
     private double latitude;
     private double longitude;
+    private String address;
     
     // Default constructor required by Firebase
     public LocationData() {
     }
     
     // Constructor with name, latitude, and longitude parameters
-    public LocationData( String uuid, String name, double latitude, double longitude ) {
+    public LocationData( String uuid, String name, double latitude, double longitude,String address ) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.uuid = uuid;
+        this.address = address;
         
         // Format the current date and time
         SimpleDateFormat sdf = new SimpleDateFormat( "dd-MM-yyyy HH:mm:ss", Locale.US );
@@ -34,23 +37,6 @@ public class LocationData implements ClusterItem {
     public String getUuid() {
         return uuid;
     }
-    
-    public String getName() {
-        return name;
-    }
-    
-    public String getDateTime() {
-        return dateTime;
-    }
-    
-    public double getLatitude() {
-        return latitude;
-    }
-    
-    public double getLongitude() {
-        return longitude;
-    }
-    
     @Override
     public LatLng getPosition() {
         return new LatLng( latitude, longitude );
@@ -64,5 +50,9 @@ public class LocationData implements ClusterItem {
     @Override
     public String getSnippet() {
         return dateTime;
+    }
+    
+    public String getAddress() {
+        return address;
     }
 }

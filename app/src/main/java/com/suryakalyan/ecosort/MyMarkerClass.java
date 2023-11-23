@@ -18,12 +18,12 @@ public class MyMarkerClass implements ClusterItem {
     
     @Override
     public String getTitle() {
-        return location.getName();
+        return location.getTitle();
     }
     
     @Override
     public String getSnippet() {
-        return location.getDateTime();
+        return location.getSnippet();
     }
     
     public LocationData getLocationData() {
